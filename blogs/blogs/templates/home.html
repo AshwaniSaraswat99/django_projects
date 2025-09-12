@@ -1,0 +1,16 @@
+<h1>welcome to my blogs site</h1>
+<a href="login">login</a>
+<a href="register">Register</a>
+
+{% for post in posts reversed %}
+
+    <h4>{{post.title}}</h4>
+    <p>{{post.created_at}}</p>
+    <ul><li>
+    <h4>{{post.body|truncatewords:20}}
+         <a href="/posts/{{post.id}}">Read more</a>
+        </h4></ul>
+    
+</li>
+
+{% endfor %}
