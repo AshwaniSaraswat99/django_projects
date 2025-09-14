@@ -1,7 +1,12 @@
 <h1>Welcome to my live weather detector</h1>
 
-<form method="POST" action="index"></form>
+<form method="POST" action="{% url 'index' %}">
+    {% csrf_token %}
+    <input type="text" name="city" >
+    <button type="submit">Get Weather</button>
+</form>
 <div>
+    <h1>{{city}}</h1>
     <h3>country code: country code</h3>
     <h4>temp: temp</h4>
     <h4>humidity: humidity</h4>
