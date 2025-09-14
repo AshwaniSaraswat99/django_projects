@@ -11,8 +11,9 @@ def index(request):
     if request.method == "POST":
         city = request.POST['city']
         response=requests.get(f'https://api.weatherapi.com/v1/current.json?key={Weather_API}&q={city}&aqi=no').json()
-        if "error" in response:
-            error_message = "Invalid city! Please enter a valid city name."
+        if not city or "error" in response:
+            messages.error(request, "Please enter a valid city name.")
+            return redirect('index.html')
         weather={
             'city':city,
             "country": response["location"]["country"],

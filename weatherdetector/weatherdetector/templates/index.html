@@ -5,11 +5,11 @@
     <input type="text" name="city" placeholder="Enter city name" required>
     <button type="submit">Get Weather</button>
 </form>
-{% if error %}
-    <p style="color: red;">{{ error_message }}</p>
-{% endif %}
+{% for message in messages %}
+<h4 name="message" style="color:red;"> {{message}} </h4>
+{% endfor %}
 <div>
-    <h1>{{city}}</h1>
+    <h2>{{weather.city}}</h2>
     <h3>country code: {{weather.country}}</h3>
     <h4>temp: {{weather.temp_c}}</h4>
     <h4>time: {{weather.time}}</h4>
