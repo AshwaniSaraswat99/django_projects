@@ -1,0 +1,10 @@
+<H1>welcome to Chat Guys</H1>
+
+<form method="POST" action="checkview">
+    {% csrf_token %}
+    <h2>Room Name</h2>
+    <input type="text" name="room_name" placeholder="Enter room name here">
+    <h2>Your Name</h2>
+    <input type="text" name="username" placeholder="Enter your name here">
+    <button type="submit">Send</button>
+</form>

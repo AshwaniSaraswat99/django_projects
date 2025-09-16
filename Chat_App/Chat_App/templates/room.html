@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Room</title>
+</head>
+<body>
+    <form id="post_form">
+        {% csrf_token %}
+        <h1>Welcome to room: {{ room }}</h1>
+        <p>User: {{ user_name }}</p>
+        <p>{{room_details.id}}</p>
+        <input type="hidden" name="user_name" id="user_name" value="{{ user_name }}">
+        <input type="hidden" name="room_id" id="room_id" value="{{ room_details.id }}">
+        <input type="text" name="message" id="message" width="100px">
+        <input type="submit" name="submit">
+    </form>
+</body>
+<div id="display">
+    <h2>Messages</h2>
+    <div id="messages" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:auto;">
+        {% for msg in messages %}
+            <p><strong>{{ msg.user_name }}:</strong> {{ msg.message }}</p>
+        {% empty %}
+            <p>No messages yet.</p>
+        {% endfor %}
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        function fetchMessages() {
+            $.ajax({
+                url: '/getmessages/{{ room }}/',
+                type: 'GET',
+                success: function(data) {
+                    // Clear the existing messages
+                    $('#messages').empty();
+                    
+                    // Append each message to the messages div
+                    data.messages.forEach(function(msg) {
+                        $('#messages').append('<p><strong>' + msg.user_name + ':</strong> ' + msg.message + '</p>');
+                    });
+                },
+                error: function(xhr) {
+                    console.log('Error fetching messages: ' + xhr.responseText);
+                }
+            });
+        }
+
+        // Fetch messages every 5 seconds
+        setInterval(fetchMessages, 1000);
+        
+        // Initial fetch
+        fetchMessages();
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    $(document).on('submit', '#post_form', function(e) {
+        e.preventDefault(); // ✅ fixed
+
+        $.ajax({
+            type: 'POST',
+            url: '/send',
+            data: {
+                user_name: $('#user_name').val(),   // ✅ fixed
+                message: $('#message').val(),
+                room_id: $('#room_id').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'  // ✅ fixed
+            },
+            success: function(data) {
+                console.log(data);
+                // Clear the message box after success
+                    
+                $('#messages').append('<p><strong>' + $('#user_name').val() + ':</strong> ' + $('#message').val() + '</p>');
+                $('#message').val('');
+            },
+            error: function(xhr) {
+                alert('Error: ' + xhr.responseText);
+            }
+        });
+    });
+</script>
+
